@@ -1,1 +1,1 @@
-laporan kas cluster moonlake.github.io
+laporan-kas-cluster-moonlake.github.io
