@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Kas RT/RW Cluster MoonLake</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2c5282;
+            --accent-color: #4299e1;
+            --success-color: #48bb78;
+            --danger-color: #f56565;
+            --warning-color: #ed8936;
+            --light-bg: #f7fafc;
+            --white: #ffffff;
+            --text-color: #2d3748;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* --- LOGIN PAGE --- */
+        #login-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .login-container {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-container h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .login-container p {
+            color: #718096;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: var(--white);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #e53e3e;
+        }
+
+        /* --- DASHBOARD --- */
+        #dashboard-page {
+            display: none;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar h2 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+        
+        .sidebar-menu .menu-title {
+            padding: 0.5rem 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+        }
+        
+        .btn-logout {
+            margin-top: auto;
+            background-color: var(--danger-color);
+            color: var(--white);
+            text-align: center;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .btn-logout:hover {
+            background-color: #e53e3e;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .content-header {
+            margin-bottom: 2rem;
+        }
+
+        .content-header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-header p {
+            color: #718096;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-header h3 {
+            color: var(--primary-color);
+            font-size: 1.25rem;
+        }
+
+        .form-inline {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-inline .form-group {
+            flex-grow: 1;
+            margin-bottom: 0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background-color: var(--light-bg);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .data-table tbody tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid;
+        }
+        
+        .summary-card.income { border-left-color: var(--success-color); }
+        .summary-card.expense { border-left-color: var(--danger-color); }
+        .summary-card.balance { border-left-color: var(--accent-color); }
+
+        .summary-card h4 {
+            color: #718096;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-card p {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .filter-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: end;
+        }
+        
+        .filter-form select, .filter-form input {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .text-success { color: var(--success-color); font-weight: 600; }
+        .text-danger { color: var(--danger-color); font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN PAGE -->
+    <div id="login-page">
+        <div class="login-container">
+            <h1>MoonLake</h1>
+            <p>Sistem Informasi Kas RT/RW</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Masuk</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="dashboard-page" class="container">
+        <aside class="sidebar">
+            <h2>🌙 MoonLake</h2>
+            <ul class="sidebar-menu">
+                <li class="menu-title" id="menu-entry-title" style="display:none;">Menu Entry</li>
+                <li id="menu-entry-ipl" style="display:none;"><a href="#" onclick="showPage('entry-ipl-page')">Pembayaran IPL</a></li>
+                <li id="menu-entry-income" style="display:none;"><a href="#" onclick="showPage('entry-income-page')">Pemasukan Lain-lain</a></li>
+                <li id="menu-entry-expense" style="display:none;"><a href="#" onclick="showPage('entry-expense-page')">Pengeluaran Kas</a></li>
+
+                <li class="menu-title">Menu Laporan</li>
+                <li><a href="#" onclick="showPage('report-summary-page')">Laporan Kas Bulanan</a></li>
+                <li><a href="#" onclick="showPage('report-ipl-page')">Laporan Pemasukan IPL</a></li>
+                <li><a href="#" onclick="showPage('report-expense-page')">Laporan Pengeluaran</a></li>
+                <li><a href="#" onclick="showPage('report-unpaid-page')">Rumah Belum Bayar</a></li>
+                <li><a href="#" onclick="showPage('report-deposit-card-page')">Kartu Setoran</a></li>
+            </ul>
+            <a href="#" class="btn-logout" onclick="logout()">Keluar</a>
+        </aside>
+
+        <main class="main-content">
+            <!-- Entry IPL Page -->
+            <div id="entry-ipl-page" class="page-content hidden">
+                <div class="content-header">
+                    <h1>Entry Pembayaran IPL</h1>
+                    <p>Mencatat pembayaran Iuran Pengelolaan Lingkungan (IPL) dari warga.</p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Form Pembayaran</h3>
+                    </div>
+                    <form id="ipl-form">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label for="ipl-date">Tanggal Bayar</label>
+                                <input type="date" id="ipl-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ipl-house">Nomor Rumah</label>
+                                <input type="text" id="ipl-house" placeholder="Contoh: A-01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ipl-period">Periode (Bulan-Tahun)</label>
+                                <input type="month" id="ipl-period" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ipl-amount">Jumlah (Rp)</label>
+                                <input type="number" id="ipl-amount" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+                 <div class="card">
+                    <div class="card-header">
+                        <h3>Riwayat Pembayaran IPL</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>No. Rumah</th>
+                                <th>Periode</th>
+                                <th>Jumlah</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ipl-tbody">
+                            <!-- Data akan diisi oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Entry Income Page -->
+            <div id="entry-income-page" class="page-content hidden">
+                <div class="content-header">
+                    <h1>Entry Pemasukan Lain-lain</h1>
+                    <p>Mencatat sumber pemasukan kas selain IPL.</p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Form Pemasukan</h3>
+                    </div>
+                    <form id="income-form">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label for="income-date">Tanggal</label>
+                                <input type="date" id="income-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="income-desc">Keterangan</label>
+                                <input type="text" id="income-desc" placeholder="Contoh: Denda Keterlambatan" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="income-amount">Jumlah (Rp)</label>
+                                <input type="number" id="income-amount" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+                 <div class="card">
+                    <div class="card-header">
+                        <h3>Riwayat Pemasukan Lain-lain</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Keterangan</th>
+                                <th>Jumlah</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="income-tbody">
+                            <!-- Data akan diisi oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Entry Expense Page -->
+            <div id="entry-expense-page" class="page-content hidden">
+                <div class="content-header">
+                    <h1>Entry Pengeluaran Kas</h1>
+                    <p>Mencatat seluruh pengeluaran kas RT/RW.</p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Form Pengeluaran</h3>
+                    </div>
+                    <form id="expense-form">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label for="expense-date">Tanggal</label>
+                                <input type="date" id="expense-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="expense-desc">Keterangan</label>
+                                <input type="text" id="expense-desc" placeholder="Contoh: Belanja ATK RT" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="expense-amount">Jumlah (Rp)</label>
+                                <input type="number" id="expense-amount" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+                 <div class="card">
+                    <div class="card-header">
+                        <h3>Riwayat Pengeluaran</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Keterangan</th>
+                                <th>Jumlah</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expense-tbody">
+                            <!-- Data akan diisi oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Report Summary Page -->
+            <div id="report-summary-page" class="page-content hidden">
+                <div class="content-header">
+                    <h1>Laporan Kas Masuk & Keluar</h1>
+                    <p>Rekapitulasi pemasukan dan pengeluaran kas per bulan.</p>
+                </div>
+                <div class="filter-form">
+                    <div class="form-group">
+                        <label for="summary-month">Bulan</label>
+                        <select id="summary-month">
+                            <option value="01">Januari</option>
+                            <option value="02">Februari</option>
+                            <option value="03">Maret</option>
+                            <option value="04">April</option>
+                            <option value="05">Mei</option>
+                            <option value="06">Juni</option>
+                            <option value="07">Juli</option>
+                            <option value="08">Agustus</option>
+                            <option value="09">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Desember</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="summary-year">Tahun</label>
+                        <input type="number" id="summary-year" value="2024" min="2020" max="2030">
+                    </div>
+                    <button class="btn btn-primary" onclick="generateSummary()">Tampilkan Laporan</button>
+                </div>
+                <div class="summary-cards">
+                    <div class="summary-card income">
+                        <h4>Total Pemasukan</h4>
+                        <p id="summary-total-income">Rp 0</p>
+                    </div>
+                    <div class="summary-card expense">
+                        <h4>Total Pengeluaran</h4>
+                        <p id="summary-total-expense">Rp 0</p>
+                    </div>
+                    <div class="summary-card balance">
+                        <h4>Saldo Akhir</h4>
+                        <p id="summary-balance">Rp 0</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Detail Transaksi</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Keterangan</th>
+                                <th>Pemasukan</th>
+                                <th>Pengeluaran</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summary-tbody">
+                             <!-- Data akan diisi oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Report IPL Page -->
+            <div id="report-ipl-page" class="page-content hidden">
+                <div class="content-header">
+                    <h1>Laporan Pemasukan IPL</h1>
+                    <p>Daftar seluruh pembayaran IPL pada bulan dan tahun tertentu.</p>
+                </div>
+                <div class="filter-form">
+                    <div class="form-group">
+                        <label for="ipl-report-month">Bulan</label>
+                        <select id="ipl-report-month">
+                            <option value="01">Januari</option>
+                            <option value="02">Februari</option>
+                            <option value="03">Maret</option>
+                            <option value="04">April</option>
+                            <option value="05">Mei</option>
+                            <option value="06">Juni</option>
+                            <option value="07">Juli</option>
+                            <option value="08">Agustus</option>
+                            <option value="09">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Desember</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ipl-report-year">Tahun</label>
+                        <input type="number" id="ipl-report-year" value="2024" min="2020" max="2030">
+                    </div>
+                    <button class="btn btn-primary" onclick="generateIPLReport()">Tampilkan Laporan</button>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Detail Pembayaran IPL</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal Bayar</th>
+                                <th>No. Rumah</th>
+                                <th>Periode Bayar</th>
+                                <th>Jumlah</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ipl-report-tbody">
+                             <!-- Data akan diisi oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Report Expense Page -->
+            <div id="report-expense-page" class="page-content hidden">
+                <div class="content-header">
+                    <h1>Laporan Pengeluaran Kas</h1>
+                    <p>Daftar seluruh pengeluaran pada bulan dan tahun tertentu.</p>
+                </div>
+                <div class="filter-form">
+                    <div class="form-group">
+                        <label for="expense-report-month">Bulan</label>
+                        <select id="expense-report-month">
+                            <option value="01">Januari</option>
+                            <option value="02">Februari</option>
+                            <option value="03">Maret</option>
+                            <option value="04">April</option>
+                            <option value="05">Mei</option>
+                            <option value="06">Juni</option>
+                            <option value="07">Juli</option>
+                            <option value="08">Agustus</option>
+                            <option value="09">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Desember</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="expense-report-year">Tahun</label>
+                        <input type="number" id="expense-report-year" value="2024" min="2020" max="2030">
+                    </div>
+                    <button class="btn btn-primary" onclick="generateExpenseReport()">Tampilkan Laporan</button>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Detail Pengeluaran</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Keterangan</th>
+                                <th>Jumlah</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expense-report-tbody">
+                             <!-- Data akan diisi oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Report Unpaid Page -->
+            <div id="report-unpaid-page" class="page-content hidden">
+                <div class="content-header">
+                    <h1>Laporan Rumah Belum Bayar IPL</h1>
+                    <p>Daftar rumah yang belum melakukan pembayaran IPL untuk periode tertentu.</p>
+                </div>
+                <div class="filter-form">
+                    <div class="form-group">
+                        <label for="unpaid-period">Periode (Bulan-Tahun)</label>
+                        <input type="month" id="unpaid-period" value="2024-05">
+                    </div>
+                    <button class="btn btn-primary" onclick="generateUnpaidReport()">Tampilkan Laporan</button>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Daftar Tunggakan</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nomor Rumah</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="unpaid-tbody">
+                             <!-- Data akan diisi oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Report Deposit Card Page -->
+            <div id="report-deposit-card-page" class="page-content hidden">
+                <div class="content-header">
+                    <h1>Kartu Setoran Rumah</h1>
+                    <p>Melihat riwayat pembayaran untuk satu rumah dalam satu tahun.</p>
+                </div>
+                <div class="filter-form">
+                    <div class="form-group">
+                        <label for="deposit-house">Nomor Rumah</label>
+                        <input type="text" id="deposit-house" placeholder="Contoh: A-01">
+                    </div>
+                    <div class="form-group">
+                        <label for="deposit-year">Tahun</label>
+                        <input type="number" id="deposit-year" value="2024" min="2020" max="2030">
+                    </div>
+                    <button class="btn btn-primary" onclick="generateDepositCard()">Tampilkan Kartu</button>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 id="deposit-card-title">Riwayat Pembayaran</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal Bayar</th>
+                                <th>Periode</th>
+                                <th>Jenis Pembayaran</th>
+                                <th>Jumlah</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deposit-tbody">
+                             <!-- Data akan diisi oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+<script>
+    // --- GLOBAL VARIABLES & INITIALIZATION ---
+    let currentUserRole = '';
+    const DB_KEY = 'kasMoonLakeDB';
+
+    // Data awal jika localStorage kosong
+    const initialData = {
+        transactions: [
+            // Contoh data IPL
+            { id: 1, date: '2024-05-01', type: 'IPL', description: 'IPL A-01', amount: 500000, house: 'A-01', period: '2024-05' },
+            { id: 2, date: '2024-05-03', type: 'IPL', description: 'IPL B-05', amount: 500000, house: 'B-05', period: '2024-05' },
+            { id: 3, date: '2024-05-05', type: 'IPL', description: 'IPL C-12', amount: 500000, house: 'C-12', period: '2024-05' },
+            // Contoh data Pemasukan Lain
+            { id: 4, date: '2024-05-10', type: 'Pemasukan Lain', description: 'Denda Keterlambatan B-02', amount: 50000, house: null, period: null },
+            // Contoh data Pengeluaran
+            { id: 5, date: '2024-05-15', type: 'Pengeluaran', description: 'Belanja ATK RT', amount: 250000, house: null, period: null },
+            { id: 6, date: '2024-05-20', type: 'Pengeluaran', description: 'Sewa Sound System', amount: 750000, house: null, period: null },
+        ],
+        // Daftar semua rumah di cluster (penting untuk laporan belum bayar)
+        allHouses: ['A-01', 'A-02', 'A-03', 'B-01', 'B-02', 'B-03', 'B-04', 'B-05', 'C-01', 'C-02', 'C-03', 'C-12']
+    };
+
+    function initializeDB() {
+        if (!localStorage.getItem(DB_KEY)) {
+            localStorage.setItem(DB_KEY, JSON.stringify(initialData));
+        }
+    }
+
+    function getDB() {
+        return JSON.parse(localStorage.getItem(DB_KEY));
+    }
+
+    function saveDB(data) {
+        localStorage.setItem(DB_KEY, JSON.stringify(data));
+    }
+
+    // --- AUTHENTICATION ---
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (username === 'admin' && password === 'admin123') {
+            currentUserRole = 'admin';
+            showDashboard();
+        } else if (username === 'moonlake' && password === 'moonlake') {
+            currentUserRole = 'warga';
+            showDashboard();
+        } else {
+            alert('Username atau Password salah!');
+        }
+    });
+
+    function showDashboard() {
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('dashboard-page').style.display = 'flex';
+
+        // Tampilkan/sembunyikan menu berdasarkan role
+        if (currentUserRole === 'admin') {
+            document.getElementById('menu-entry-title').style.display = 'block';
+            document.getElementById('menu-entry-ipl').style.display = 'block';
+            document.getElementById('menu-entry-income').style.display = 'block';
+            document.getElementById('menu-entry-expense').style.display = 'block';
+        } else {
+            document.getElementById('menu-entry-title').style.display = 'none';
+            document.getElementById('menu-entry-ipl').style.display = 'none';
+            document.getElementById('menu-entry-income').style.display = 'none';
+            document.getElementById('menu-entry-expense').style.display = 'none';
+        }
+        
+        // Tampilkan halaman default (laporan kas)
+        showPage('report-summary-page');
+    }
+
+    function logout() {
+        if (confirm('Apakah Anda yakin ingin keluar?')) {
+            currentUserRole = '';
+            document.getElementById('dashboard-page').style.display = 'none';
+            document.getElementById('login-page').style.display = 'flex';
+            document.getElementById('login-form').reset();
+        }
+    }
+
+    // --- NAVIGATION ---
+    function showPage(pageId) {
+        // Sembunyikan semua halaman konten
+        const pages = document.querySelectorAll('.page-content');
+        pages.forEach(page => page.classList.add('hidden'));
+
+        // Tampilkan halaman yang dipilih
+        document.getElementById(pageId).classList.remove('hidden');
+
+        // Update status aktif di menu sidebar
+        const menuLinks = document.querySelectorAll('.sidebar-menu a');
+        menuLinks.forEach(link => link.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Refresh data di halaman yang ditampilkan
+        if (pageId === 'entry-ipl-page') displayTransactions('IPL');
+        if (pageId === 'entry-income-page') displayTransactions('Pemasukan Lain');
+        if (pageId === 'entry-expense-page') displayTransactions('Pengeluaran');
+    }
+
+    // --- UTILITY FUNCTIONS ---
+    function formatRupiah(amount) {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(amount);
+    }
+    
+    function generateId() {
+        const db = getDB();
+        let maxId = 0;
+        db.transactions.forEach(t => {
+            if (t.id > maxId) maxId = t.id;
+        });
+        return maxId + 1;
+    }
+
+    // --- ENTRY FORM HANDLERS ---
+    document.getElementById('ipl-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const db = getDB();
+        const newTransaction = {
+            id: generateId(),
+            date: document.getElementById('ipl-date').value,
+            type: 'IPL',
+            description: `IPL ${document.getElementById('ipl-house').value}`,
+            amount: parseInt(document.getElementById('ipl-amount').value),
+            house: document.getElementById('ipl-house').value,
+            period: document.getElementById('ipl-period').value
+        };
+        db.transactions.push(newTransaction);
+        saveDB(db);
+        this.reset();
+        displayTransactions('IPL');
+        alert('Pembayaran IPL berhasil dicatat!');
+    });
+
+    document.getElementById('income-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const db = getDB();
+        const newTransaction = {
+            id: generateId(),
+            date: document.getElementById('income-date').value,
+            type: 'Pemasukan Lain',
+            description: document.getElementById('income-desc').value,
+            amount: parseInt(document.getElementById('income-amount').value),
+            house: null,
+            period: null
+        };
+        db.transactions.push(newTransaction);
+        saveDB(db);
+        this.reset();
+        displayTransactions('Pemasukan Lain');
+        alert('Pemasukan lain-lain berhasil dicatat!');
+    });
+
+    document.getElementById('expense-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const db = getDB();
+        const newTransaction = {
+            id: generateId(),
+            date: document.getElementById('expense-date').value,
+            type: 'Pengeluaran',
+            description: document.getElementById('expense-desc').value,
+            amount: parseInt(document.getElementById('expense-amount').value),
+            house: null,
+            period: null
+        };
+        db.transactions.push(newTransaction);
+        saveDB(db);
+        this.reset();
+        displayTransactions('Pengeluaran');
+        alert('Pengeluaran berhasil dicatat!');
+    });
+
+    // --- DISPLAY FUNCTIONS ---
+    function displayTransactions(type) {
+        const db = getDB();
+        const tbodyId = type === 'IPL' ? 'ipl-tbody' : (type === 'Pemasukan Lain' ? 'income-tbody' : 'expense-tbody');
+        const tbody = document.getElementById(tbodyId);
+        tbody.innerHTML = '';
+
+        const filteredTransactions = db.transactions.filter(t => t.type === type).sort((a,b) => new Date(b.date) - new Date(a.date));
+
+        if (filteredTransactions.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Belum ada data untuk ${type}.</td></tr>`;
+            return;
+        }
+
+        filteredTransactions.forEach(t => {
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>${t.date}</td>
+                ${t.house ? `<td>${t.house}</td>` : ''}
+                ${t.period ? `<td>${t.period}</td>` : ''}
+                <td>${t.description}</td>
+                <td>${formatRupiah(t.amount)}</td>
+                <td><button class="btn btn-danger" onclick="deleteTransaction(${t.id})">Hapus</button></td>
+            `;
+        });
+    }
+    
+    function deleteTransaction(id) {
+        if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) return;
+        
+        let db = getDB();
+        db.transactions = db.transactions.filter(t => t.id !== id);
+        saveDB(db);
+        
+        // Refresh tampilan halaman entry yang sedang aktif
+        const activePage = document.querySelector('.page-content:not(.hidden)').id;
+        if (activePage === 'entry-ipl-page') displayTransactions('IPL');
+        if (activePage === 'entry-income-page') displayTransactions('Pemasukan Lain');
+        if (activePage === 'entry-expense-page') displayTransactions('Pengeluaran');
+    }
+
+
+    // --- REPORT GENERATION FUNCTIONS ---
+    function generateSummary() {
+        const month = document.getElementById('summary-month').value;
+        const year = document.getElementById('summary-year').value;
+        const db = getDB();
+        
+        const filtered = db.transactions.filter(t => t.date.startsWith(`${year}-${month}`));
+        
+        let totalIncome = 0;
+        let totalExpense = 0;
+        const tbody = document.getElementById('summary-tbody');
+        tbody.innerHTML = '';
+        
+        const sortedFiltered = filtered.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+        sortedFiltered.forEach(t => {
+            const row = tbody.insertRow();
+            if (t.type === 'Pengeluaran') {
+                totalExpense += t.amount;
+                row.innerHTML = `<td>${t.date}</td><td>${t.description}</td><td>-</td><td>${formatRupiah(t.amount)}</td>`;
+            } else {
+                totalIncome += t.amount;
+                row.innerHTML = `<td>${t.date}</td><td>${t.description}</td><td>${formatRupiah(t.amount)}</td><td>-</td>`;
+            }
+        });
+
+        document.getElementById('summary-total-income').textContent = formatRupiah(totalIncome);
+        document.getElementById('summary-total-expense').textContent = formatRupiah(totalExpense);
+        document.getElementById('summary-balance').textContent = formatRupiah(totalIncome - totalExpense);
+    }
+    
+    function generateIPLReport() {
+        const month = document.getElementById('ipl-report-month').value;
+        const year = document.getElementById('ipl-report-year').value;
+        const db = getDB();
+        
+        const filtered = db.transactions.filter(t => t.type === 'IPL' && t.period === `${year}-${month}`);
+        const tbody = document.getElementById('ipl-report-tbody');
+        tbody.innerHTML = '';
+        
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Tidak ada pembayaran IPL pada periode ini.</td></tr>`;
+            return;
+        }
+
+        filtered.sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(t => {
+            const row = tbody.insertRow();
+            row.innerHTML = `<td>${t.date}</td><td>${t.house}</td><td>${t.period}</td><td>${formatRupiah(t.amount)}</td>`;
+        });
+    }
+
+    function generateExpenseReport() {
+        const month = document.getElementById('expense-report-month').value;
+        const year = document.getElementById('expense-report-year').value;
+        const db = getDB();
+        
+        const filtered = db.transactions.filter(t => t.type === 'Pengeluaran' && t.date.startsWith(`${year}-${month}`));
+        const tbody = document.getElementById('expense-report-tbody');
+        tbody.innerHTML = '';
+        
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Tidak ada pengeluaran pada periode ini.</td></tr>`;
+            return;
+        }
+        
+        let total = 0;
+        filtered.sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(t => {
+            total += t.amount;
+            const row = tbody.insertRow();
+            row.innerHTML = `<td>${t.date}</td><td>${t.description}</td><td>${formatRupiah(t.amount)}</td>`;
+        });
+        // Tambahkan baris total
+        const totalRow = tbody.insertRow();
+        totalRow.innerHTML = `<td colspan="2" style="text-align:right; font-weight:600;">TOTAL</td><td style="font-weight:600;">${formatRupiah(total)}</td>`;
+    }
+
+    function generateUnpaidReport() {
+        const period = document.getElementById('unpaid-period').value; // format YYYY-MM
+        const db = getDB();
+        
+        const paidHouses = db.transactions
+            .filter(t => t.type === 'IPL' && t.period === period)
+            .map(t => t.house);
+
+        const unpaidHouses = db.allHouses.filter(house => !paidHouses.includes(house));
+        
+        const tbody = document.getElementById('unpaid-tbody');
+        tbody.innerHTML = '';
+
+        if (unpaidHouses.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="2" style="text-align:center; color: var(--success-color);">Semua rumah telah membayar IPL untuk periode ${period}.</td></tr>`;
+            return;
+        }
+
+        unpaidHouses.forEach(house => {
+            const row = tbody.insertRow();
+            row.innerHTML = `<td>${house}</td><td class="text-danger">Belum Bayar</td>`;
+        });
+    }
+    
+    function generateDepositCard() {
+        const house = document.getElementById('deposit-house').value.toUpperCase();
+        const year = document.getElementById('deposit-year').value;
+        const db = getDB();
+
+        if (!db.allHouses.includes(house)) {
+            alert('Nomor rumah tidak ditemukan di daftar warga.');
+            return;
+        }
+
+        const transactions = db.transactions.filter(t => t.house === house && t.date.startsWith(year));
+        const tbody = document.getElementById('deposit-tbody');
+        tbody.innerHTML = '';
+
+        document.getElementById('deposit-card-title').textContent = `Riwayat Pembayaran Rumah ${house} - Tahun ${year}`;
+
+        if (transactions.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Tidak ada riwayat pembayaran untuk rumah ini pada tahun ${year}.</td></tr>`;
+            return;
+        }
+
+        transactions.sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(t => {
+            const row = tbody.insertRow();
+            row.innerHTML = `<td>${t.date}</td><td>${t.period || '-'}</td><td>${t.type}</td><td>${formatRupiah(t.amount)}</td>`;
+        });
+    }
+
+    // --- ON PAGE LOAD ---
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeDB();
+        // Set default date to today
+        document.getElementById('ipl-date').valueAsDate = new Date();
+        document.getElementById('income-date').valueAsDate = new Date();
+        document.getElementById('expense-date').valueAsDate = new Date();
+        
+        // Set default month to current month for reports
+        const today = new Date();
+        const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
+        document.getElementById('summary-month').value = currentMonth;
+        document.getElementById('ipl-report-month').value = currentMonth;
+        document.getElementById('expense-report-month').value = currentMonth;
+        document.getElementById('unpaid-period').value = `${today.getFullYear()}-${currentMonth}`;
+    });
+
+</script>
+
+</body>
+</html>
